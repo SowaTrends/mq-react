@@ -126,7 +126,7 @@ export default class IndexedDbClass {
      * @param cb Колбэк с результатами запроса
      */
     async getData(storeName: string, cb: (data:ItemData[])=>void) {
-        let data = await getData<ItemData>(`/data/${storeName}.json`);
+        let data = await getData<ItemData>(`../data/${storeName}.json`);
         cb(data);
         let request = this.db!.transaction(storeName, "readwrite").objectStore(storeName).clear();
         request.onsuccess = (e: Event) => {

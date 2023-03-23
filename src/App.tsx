@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Button, Container, Grid, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { useState, useEffect, ChangeEventHandler } from 'react';
+import { Button, Container, Grid, MenuItem, NativeSelect, Select, SelectChangeEvent } from "@mui/material";
 import { Chart } from './components/Chart';
 import { ChartType } from './utils/enums';
 
@@ -10,7 +10,7 @@ function App() {
 
     const years = [];
     for(let i=1881;i<2007;i++){
-        years.push(<MenuItem key={i} value={i}>{i}</MenuItem>);
+        years.push(<option value={i}>{i}</option>);
     }
 
     return (
@@ -40,34 +40,30 @@ function App() {
                 <Grid item xs={9}>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                            <Select 
-                                id="startYear" 
-                                fullWidth 
-                                value={start} 
-                                label="Начало" 
-                                sx={{ mt: 1, mb: 1 }} 
-                                onChange={(e: SelectChangeEvent<number>)=>{
-                                    const val:number = e.target.value as number;
+                            <NativeSelect
+                                id="startYear"
+                                fullWidth
+                                value={start}
+                                onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
+                                    const val:number = +e.target.value;
                                     setStart(val <= end ? val : end);
-                                }} 
+                                }}
                             >
                                 {years}
-                            </Select>
+                            </NativeSelect>
                         </Grid>
                         <Grid item xs={6}>
-                            <Select 
-                                id="endYear" 
-                                fullWidth 
-                                value={end} 
-                                label="Конец" 
-                                sx={{ mt: 1, mb: 1 }} 
-                                onChange={(e: SelectChangeEvent<number>)=>{
-                                    const val:number = e.target.value as number;
+                            <NativeSelect
+                                id="endYear"
+                                fullWidth
+                                value={end}
+                                onChange={(e: React.ChangeEvent<HTMLSelectElement>)=>{
+                                    const val:number = +e.target.value;
                                     setEnd(val >= start ? val : start);
-                                }} 
+                                }}
                             >
                                 {years}
-                            </Select>
+                            </NativeSelect>
                         </Grid>
                         <Chart chartType={chartType} start={start} end={end} />
                     </Grid>

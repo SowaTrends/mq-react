@@ -1,18 +1,34 @@
 import { ItemData } from "./types";
 
+/**
+ * Класс для отрисовки графика
+ */
 export class CanvasDraw {
-    width: number;          //ширина Canvas
-    innerWidth: number;     //внутренняя ширина зоны отрисовки данных
-    height: number;         //высота Canvas
-    innerHeight: number;    //внутренняя высота зоны отрисовки данных
-    min: number;            //минимальное значение шкалы y
-    max: number;            //максимальное значение шкалы y
-    dx: number;             //расстояние между точками x
-    dy: number;             //шаг шкалы y
-    py: number;             //расстояние шага шкалы y
-    zeropoint: number;      //координата 0 на графике по y
-    ctx: CanvasRenderingContext2D;      //контекст Canvas
-    data: ItemData[];                   //данные для графика
+    /**
+     * @var width ширина Canvas
+     * @var innerWidth внутренняя ширина зоны отрисовки данных
+     * @var height высота Canvas
+     * @var innerHeight внутренняя высота зоны отрисовки данных
+     * @var min минимальное значение шкалы y
+     * @var max максимальное значение шкалы y
+     * @var dx расстояние между точками x
+     * @var dy шаг шкалы y
+     * @var zeropoint координата 0 на графике по y
+     * @var ctx контекст Canvas
+     * @var data данные для графика
+     */
+    width: number;
+    innerWidth: number;
+    height: number;
+    innerHeight: number;
+    min: number;
+    max: number;
+    dx: number;
+    dy: number;
+    py: number;
+    zeropoint: number;
+    ctx: CanvasRenderingContext2D;
+    data: ItemData[];
 
     constructor(ctx: CanvasRenderingContext2D, data: ItemData[]) {
         ctx.canvas.style.width ='100%';
@@ -25,21 +41,22 @@ export class CanvasDraw {
         this.ctx = ctx;
 
         this.data = this.groupData(data);
-        //вычисляем максимум по y
         this.max = this.data.reduce((prev, curr) => {
             return Math.max(prev,curr.v);
         },0);
-        //вычисляем минимум по y
         this.min = this.data.reduce((prev, curr) => {
             return Math.min(prev,curr.v);
         },0);
-        //вычисляем шаги для точек, т.к. график автомасштабируется по ширине
-        this.dx = this.innerWidth/this.data.length;
+        this.dx = (this.width-30)/this.data.length;
         this.dy = (this.max - this.min)/10;
         this.py = this.innerHeight/10;
         this.zeropoint = this.max*this.py/this.dy + this.py/2 - 10;
     }
 
+    /**
+     * Группируем данные чтобы отобразить максимальное количество точек
+     * @param data массив данных
+     */
     groupData(data:ItemData[]):ItemData[]{
         const result:ItemData[] = [];
 
@@ -58,6 +75,10 @@ export class CanvasDraw {
         return data;
     }
 
+    /**
+     * Усредняем точки
+     * @param data массив данных
+     */
     getAvg(data: ItemData[], start:number, end:number):number{
         let sum:number = 0;
         for (let i:number = start; i < end; i++) {
@@ -67,20 +88,26 @@ export class CanvasDraw {
         return (sum / (end - start + 1));
     }
 
-    //рисуем график
+    /**
+     * Рисуем график
+     */
     drawChart(){
-        this.clear();       //очищаем график
-        this.drawData();    //рисуем данные
-        this.drawAxis();    //рисуем оси
-        this.drawLabels();  //наносим подписи шкалы
+        this.clear();
+        this.drawData();
+        this.drawAxis();
+        this.drawLabels();
     }
 
-    //очищаем график
+    /**
+     * Очищаем график
+     */
     clear(){
         this.ctx.clearRect(0, 0, this.width, this.height);
     }
 
-    //рисуем оси
+    /**
+     * Рисуем оси
+     */
     drawAxis() {
         //y
         this.ctx.strokeStyle = "black";
@@ -98,7 +125,9 @@ export class CanvasDraw {
         this.ctx.fillText(0+"", 4, this.zeropoint); 
     }
     
-    //наносим подписи шкалы
+    /**
+     * Наносим подписи шкалы
+     */
     drawLabels() {
         this.ctx.strokeStyle = "black";
         //подписи по y
@@ -114,7 +143,9 @@ export class CanvasDraw {
         }
     }
     
-    //рисуем данные
+    /**
+     * Рисуем данные
+     */
     drawData() {
         this.ctx.strokeStyle = "#9c27b0"; 
         

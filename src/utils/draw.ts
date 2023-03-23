@@ -61,7 +61,6 @@ export class CanvasDraw {
         const result:ItemData[] = [];
 
         let minInterval:number = Math.ceil(data.length / this.width);
-
         if(minInterval > 1){
             for (let i=0; i < Math.floor(data.length/minInterval);i++) {
                 const val:number = this.getAvg(data, minInterval*i, (minInterval*(i+1)));

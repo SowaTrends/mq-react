@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEventHandler } from 'react';
+import { useState } from 'react';
 import { Button, Container, Grid, MenuItem, NativeSelect, Select, SelectChangeEvent } from "@mui/material";
 import { Chart } from './components/Chart';
 import { ChartType } from './utils/enums';
@@ -10,7 +10,7 @@ function App() {
 
     const years = [];
     for(let i=1881;i<2007;i++){
-        years.push(<option value={i}>{i}</option>);
+        years.push(<option key={i} value={i}>{i}</option>);
     }
 
     return (
